@@ -1,0 +1,56 @@
+[
+  {
+    "id": "5",
+    "name": "DEVICE_STATUS_EVENT",
+    "description": "Device status event has occurred",
+    "type": "WEBHOOK"
+  },
+  {
+    "id": "6",
+    "name": "RAIN_DELAY_EVENT",
+    "description": "A rain delay event has occurred",
+    "type": "WEBHOOK"
+  },
+  {
+    "id": "7",
+    "name": "WEATHER_INTELLIGENCE_EVENT",
+    "description": "A weather intelligence event has has occurred",
+    "type": "WEBHOOK"
+  },
+  {
+    "id": "8",
+    "name": "WATER_BUDGET",
+    "description": "A water budget event has occurred",
+    "type": "WEBHOOK"
+  },
+  {
+    "id": "9",
+    "name": "SCHEDULE_STATUS_EVENT",
+    "description": "A schedule status event has occurred",
+    "type": "WEBHOOK"
+  },
+  {
+    "id": "10",
+    "name": "ZONE_STATUS_EVENT",
+    "description": "A zone status event has occurred",
+    "type": "WEBHOOK"
+  },
+  {
+    "id": "11",
+    "name": "RAIN_SENSOR_DETECTION_EVENT",
+    "description": "A rain sensor detection event has occurred",
+    "type": "WEBHOOK"
+  },
+  {
+    "id": "12",
+    "name": "ZONE_DELTA",
+    "description": "A physical zone data change has occurred",
+    "type": "WEBHOOK"
+  },
+  {
+    "id": "14",
+    "name": "DELTA",
+    "description": "An entity has been inserted, updated, or deleted",
+    "type": "WEBHOOK"
+  }
+]

@@ -1,0 +1,275 @@
+{
+  "id": "7a3c5e10-2b4d-4f6a-8c9e-0a1b2c3d4e5f",
+  "username": "gardener",
+  "fullName": "Test Gardener",
+  "email": "gardener@example.invalid",
+  "createDate": 1709812800000,
+  "deleted": false,
+  "enabled": true,
+  "devices": [
+    {
+      "id": "3d6f1a52-8c41-4b7e-9f0a-1c2d3e4f5a60",
+      "status": "ONLINE",
+      "name": "Front yard",
+      "on": true,
+      "paused": false,
+      "deleted": false,
+      "model": "GENERATION3_8ZONE",
+      "serialNumber": "R3TEST0001",
+      "macAddress": "000000000001",
+      "homeKitCompatible": true,
+      "timeZone": "Europe/Paris",
+      "utcOffset": 7200000,
+      "scheduleModeType": "SCHEDULED",
+      "createDate": 1709814600000,
+      "rainDelayStartDate": 1790748000000,
+      "rainDelayExpirationDate": 1790834400000,
+      "zones": [
+        {
+          "id": "22b8d4f6-3a5c-4e7d-9fa0-1b2c3d4e5f02",
+          "zoneNumber": 2,
+          "name": "Flower beds",
+          "enabled": true,
+          "customNozzle": {
+            "name": "Fixed Spray Head",
+            "category": "FIXED_SPRAY_HEAD",
+            "inchesPerHour": 1.4
+          },
+          "customSoil": {
+            "name": "Loam"
+          },
+          "customCrop": {
+            "name": "Cool Season Grass",
+            "coefficient": 0.8
+          },
+          "availableWater": 0.17,
+          "rootZoneDepth": 6,
+          "managementAllowedDepletion": 0.5,
+          "efficiency": 0.8,
+          "yardAreaSquareFeet": 500,
+          "depthOfWater": 0.51,
+          "runtime": 1391,
+          "maxRuntime": 10800,
+          "fixedRuntime": 0,
+          "imageUrl": "https://media.example.invalid/zone.jpg",
+          "lastWateredDate": 1791692100000
+        },
+        {
+          "id": "11a7c3e5-2f4b-4d6c-8e9f-0a1b2c3d4e01",
+          "zoneNumber": 1,
+          "name": "Front lawn",
+          "enabled": true,
+          "customNozzle": {
+            "name": "Fixed Spray Head",
+            "category": "FIXED_SPRAY_HEAD",
+            "inchesPerHour": 1.4
+          },
+          "customSoil": {
+            "name": "Loam"
+          },
+          "customCrop": {
+            "name": "Cool Season Grass",
+            "coefficient": 0.8
+          },
+          "availableWater": 0.17,
+          "rootZoneDepth": 6,
+          "managementAllowedDepletion": 0.5,
+          "efficiency": 0.8,
+          "yardAreaSquareFeet": 500,
+          "depthOfWater": 0.51,
+          "runtime": 1391,
+          "maxRuntime": 10800,
+          "fixedRuntime": 0,
+          "imageUrl": "https://media.example.invalid/zone.jpg",
+          "lastWateredDate": 1791777600000,
+          "lastWateredDuration": 900
+        },
+        {
+          "id": "33c9e5a7-4b6d-4f8e-a0b1-2c3d4e5f6a03",
+          "zoneNumber": 3,
+          "name": "Hedge",
+          "enabled": true,
+          "customNozzle": {
+            "name": "Fixed Spray Head",
+            "category": "FIXED_SPRAY_HEAD",
+            "inchesPerHour": 1.4
+          },
+          "customSoil": {
+            "name": "Loam"
+          },
+          "customCrop": {
+            "name": "Cool Season Grass",
+            "coefficient": 0.8
+          },
+          "availableWater": 0.17,
+          "rootZoneDepth": 6,
+          "managementAllowedDepletion": 0.5,
+          "efficiency": 0.8,
+          "yardAreaSquareFeet": 500,
+          "depthOfWater": 0.51,
+          "runtime": 1391,
+          "maxRuntime": 10800,
+          "fixedRuntime": 0,
+          "imageUrl": "https://media.example.invalid/zone.jpg"
+        },
+        {
+          "id": "44dafbb8-5c7e-4a9f-b1c2-3d4e5f6a7b04",
+          "zoneNumber": 4,
+          "name": "Zone 4",
+          "enabled": false,
+          "customNozzle": {
+            "name": "Fixed Spray Head",
+            "category": "FIXED_SPRAY_HEAD",
+            "inchesPerHour": 1.4
+          },
+          "customSoil": {
+            "name": "Loam"
+          },
+          "customCrop": {
+            "name": "Cool Season Grass",
+            "coefficient": 0.8
+          },
+          "availableWater": 0.17,
+          "rootZoneDepth": 6,
+          "managementAllowedDepletion": 0.5,
+          "efficiency": 0.8,
+          "yardAreaSquareFeet": 500,
+          "depthOfWater": 0.51,
+          "runtime": 1391,
+          "maxRuntime": 10800,
+          "fixedRuntime": 0,
+          "imageUrl": "https://media.example.invalid/zone.jpg"
+        }
+      ],
+      "scheduleRules": [
+        {
+          "id": "9a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c01",
+          "name": "Lawn",
+          "externalName": "Lawn",
+          "enabled": true,
+          "summary": "Every Mon, Wed, Fri at 6:00 AM",
+          "totalDuration": 2700,
+          "rainDelay": true,
+          "zones": [
+            {
+              "zoneId": "11a7c3e5-2f4b-4d6c-8e9f-0a1b2c3d4e01",
+              "zoneNumber": 1,
+              "duration": 1800,
+              "sortOrder": 0
+            },
+            {
+              "zoneId": "22b8d4f6-3a5c-4e7d-9fa0-1b2c3d4e5f02",
+              "zoneNumber": 2,
+              "duration": 900,
+              "sortOrder": 1
+            }
+          ]
+        },
+        {
+          "id": "9a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c02",
+          "name": "",
+          "externalName": "Flowers",
+          "enabled": false,
+          "summary": "Every 3 days at 7:00 PM",
+          "totalDuration": 600
+        }
+      ],
+      "flexScheduleRules": [
+        {
+          "id": "9a1b2c3d-4e5f-4a6b-8c7d-9e0f1a2b3c03",
+          "name": "Flex Daily",
+          "enabled": true,
+          "totalDuration": 1800
+        }
+      ],
+      "webhooks": []
+    },
+    {
+      "id": "8b2e4c71-5d93-4a1f-b6e8-7f9a0b1c2d30",
+      "status": "OFFLINE",
+      "name": "Back yard",
+      "on": false,
+      "paused": false,
+      "deleted": false,
+      "model": "GENERATION2_8ZONE",
+      "serialNumber": "R2TEST0002",
+      "macAddress": "000000000002",
+      "timeZone": "Europe/Paris",
+      "zones": [
+        {
+          "id": "66fcbd4a-7e9a-4cbf-d3e4-5f6a7b8c9d06",
+          "zoneNumber": 2,
+          "name": "Orchard",
+          "enabled": true,
+          "customNozzle": {
+            "name": "Fixed Spray Head",
+            "category": "FIXED_SPRAY_HEAD",
+            "inchesPerHour": 1.4
+          },
+          "customSoil": {
+            "name": "Loam"
+          },
+          "customCrop": {
+            "name": "Cool Season Grass",
+            "coefficient": 0.8
+          },
+          "availableWater": 0.17,
+          "rootZoneDepth": 6,
+          "managementAllowedDepletion": 0.5,
+          "efficiency": 0.8,
+          "yardAreaSquareFeet": 500,
+          "depthOfWater": 0.51,
+          "runtime": 1391,
+          "maxRuntime": 10800,
+          "fixedRuntime": 0,
+          "imageUrl": "https://media.example.invalid/zone.jpg",
+          "lastWateredDate": 1791655200000,
+          "lastWateredDuration": 1200
+        },
+        {
+          "id": "55ebac39-6d8f-4bae-c2d3-4e5f6a7b8c05",
+          "zoneNumber": 1,
+          "name": "Vegetable garden",
+          "enabled": true,
+          "customNozzle": {
+            "name": "Fixed Spray Head",
+            "category": "FIXED_SPRAY_HEAD",
+            "inchesPerHour": 1.4
+          },
+          "customSoil": {
+            "name": "Loam"
+          },
+          "customCrop": {
+            "name": "Cool Season Grass",
+            "coefficient": 0.8
+          },
+          "availableWater": 0.17,
+          "rootZoneDepth": 6,
+          "managementAllowedDepletion": 0.5,
+          "efficiency": 0.8,
+          "yardAreaSquareFeet": 500,
+          "depthOfWater": 0.51,
+          "runtime": 1391,
+          "maxRuntime": 10800,
+          "fixedRuntime": 0,
+          "imageUrl": "https://media.example.invalid/zone.jpg",
+          "lastWateredDate": 1791829800000,
+          "lastWateredDuration": 600
+        }
+      ],
+      "scheduleRules": [],
+      "flexScheduleRules": [],
+      "webhooks": []
+    },
+    {
+      "id": "e0e0e0e0-0000-4000-8000-000000000000",
+      "status": "OFFLINE",
+      "name": "Old controller",
+      "on": false,
+      "deleted": true,
+      "zones": [],
+      "scheduleRules": [],
+      "flexScheduleRules": []
+    }
+  ]
+}

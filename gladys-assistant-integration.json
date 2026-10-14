@@ -1,0 +1,792 @@
+{
+  "manifest_version": 1,
+  "type": "device",
+  "name": "Rachio",
+  "description": {
+    "en": "Unofficial connector: Rachio sprinkler zones, watering, rain delay and schedules.",
+    "fr": "Connecteur non officiel : zones d'arrosage Rachio, arrosage, délai pluie et programmes."
+  },
+  "version": "0.1.0",
+  "docker_image": "ghcr.io/lm1lc3n7/gladys-rachio:0.1.0",
+  "gladys_version": ">=5.1.0",
+  "cover_image": "https://raw.githubusercontent.com/LM1LC3N7/gladys-rachio/main/cover.png",
+  "categories": ["appliances"],
+  "transports": ["cloud"],
+  "config_schema": [
+    {
+      "key": "intro",
+      "type": "section",
+      "label": {
+        "en": "Rachio sprinklers in Gladys",
+        "fr": "Les arroseurs Rachio dans Gladys"
+      },
+      "description": {
+        "en": "Unofficial connector, not affiliated with Rachio. It reads your Rachio account through the public Rachio API: one device per controller (online, standby, watering now, zone and time left, rain delay) and one per enabled zone (a switch that waters it, last watering), scene triggers when watering starts or finishes, a rain delay is set or cleared and a controller goes offline, scene actions to water, run or skip a schedule, stop and delay, and a \"garden\" dashboard widget. Get your API key in the Rachio app (Profile, then API key, Copy) or on app.rach.io (Account settings, Get API key). With Gladys Plus, Rachio events arrive in real time. Rachio is a trademark of Rachio, Inc.",
+        "fr": "Connecteur non officiel, sans lien avec Rachio. Il lit votre compte Rachio via l'API publique Rachio : un appareil par contrôleur (en ligne, veille, arrosage en cours, zone et temps restant, délai pluie) et un par zone active (un interrupteur qui l'arrose, dernier arrosage), des déclencheurs de scène quand un arrosage commence ou se termine, quand un délai pluie est posé ou levé et quand un contrôleur se déconnecte, des actions de scène pour arroser, lancer ou sauter un programme, arrêter et différer, et un widget « jardin ». Votre clé d'API se trouve dans l'application Rachio (Profil, puis API key, Copy) ou sur app.rach.io (Account settings, Get API key). Avec Gladys Plus, les événements Rachio arrivent en temps réel. Rachio est une marque de Rachio, Inc."
+      },
+      "links": [
+        {
+          "url": "https://app.rach.io/",
+          "label": {
+            "en": "Rachio web app (API key)",
+            "fr": "Application web Rachio (clé d'API)"
+          }
+        },
+        {
+          "url": "https://rachio.readme.io/reference/authentication",
+          "label": {
+            "en": "Rachio API: obtaining the key",
+            "fr": "API Rachio : obtenir la clé"
+          }
+        },
+        {
+          "url": "https://github.com/LM1LC3N7/gladys-rachio/blob/main/docs/fr.md",
+          "label": {
+            "en": "Guide (French)",
+            "fr": "Guide (français)"
+          }
+        },
+        {
+          "url": "https://github.com/LM1LC3N7/gladys-rachio/blob/main/docs/en.md",
+          "label": {
+            "en": "Guide (English)",
+            "fr": "Guide (anglais)"
+          }
+        }
+      ]
+    },
+    {
+      "key": "api_key",
+      "type": "secret",
+      "required": true,
+      "label": {
+        "en": "API key",
+        "fr": "Clé d'API"
+      },
+      "description": {
+        "en": "Stored encrypted by Gladys and only sent to api.rach.io.",
+        "fr": "Stockée chiffrée par Gladys et envoyée uniquement à api.rach.io."
+      }
+    },
+    {
+      "key": "default_minutes",
+      "type": "number",
+      "required": false,
+      "default": 10,
+      "min": 1,
+      "max": 180,
+      "label": {
+        "en": "Default watering time (minutes)",
+        "fr": "Durée d'arrosage par défaut (minutes)"
+      },
+      "description": {
+        "en": "Used when a zone switch is turned on, and when a scene or the widget gives no duration.",
+        "fr": "Utilisée quand l'interrupteur d'une zone est allumé, et quand une scène ou le widget ne donne pas de durée."
+      }
+    },
+    {
+      "key": "poll_interval",
+      "type": "number",
+      "required": false,
+      "default": 10,
+      "min": 5,
+      "max": 60,
+      "label": {
+        "en": "Refresh interval (minutes)",
+        "fr": "Intervalle de rafraîchissement (minutes)"
+      },
+      "description": {
+        "en": "How often the account is read. Rachio allows a limited number of API calls a day per key: 10 minutes keeps two controllers far under it. A running watering is followed every 2 minutes whatever this value.",
+        "fr": "Fréquence de lecture du compte. Rachio limite le nombre d'appels d'API par jour et par clé : 10 minutes laissent une large marge pour deux contrôleurs. Un arrosage en cours est suivi toutes les 2 minutes quelle que soit cette valeur."
+      }
+    }
+  ],
+  "actions": [
+    {
+      "key": "test_connection",
+      "timeout_seconds": 30,
+      "label": {
+        "en": "Test Rachio",
+        "fr": "Tester Rachio"
+      },
+      "description": {
+        "en": "Reads the account: controllers, zones, schedule names and the API calls left today.",
+        "fr": "Lit le compte : contrôleurs, zones, noms des programmes et appels d'API restants aujourd'hui."
+      }
+    }
+  ],
+  "webhooks": [
+    {
+      "key": "events",
+      "label": {
+        "en": "Rachio events (real time)",
+        "fr": "Événements Rachio (temps réel)"
+      },
+      "mode": "fire_and_forget"
+    }
+  ],
+  "widgets": [
+    {
+      "key": "garden",
+      "label": {
+        "en": "Rachio garden",
+        "fr": "Jardin Rachio"
+      },
+      "description": {
+        "en": "A controller and its zones: watering, last runs, buttons to water, stop and delay.",
+        "fr": "Un contrôleur et ses zones : arrosage, derniers passages, boutons arroser, arrêter, différer."
+      },
+      "icon": "droplet",
+      "action_timeout_seconds": 30,
+      "settings": [
+        {
+          "key": "controller",
+          "type": "select",
+          "source": "devices",
+          "required": false,
+          "label": {
+            "en": "Controller (empty: the first one)",
+            "fr": "Contrôleur (vide : le premier)"
+          }
+        }
+      ]
+    }
+  ],
+  "scene_triggers": [
+    {
+      "key": "watering_started",
+      "label": {
+        "en": "Rachio watering started",
+        "fr": "Arrosage Rachio commencé"
+      },
+      "description": {
+        "en": "A zone started watering (from a schedule, the Rachio app or Gladys).",
+        "fr": "Une zone a commencé à arroser (programme, application Rachio ou Gladys)."
+      },
+      "fields": [
+        {
+          "key": "controller",
+          "type": "select",
+          "source": "devices",
+          "required": false,
+          "label": {
+            "en": "Controller (empty: any)",
+            "fr": "Contrôleur (vide : n'importe lequel)"
+          }
+        },
+        {
+          "key": "zone",
+          "type": "select",
+          "source": "devices",
+          "required": false,
+          "label": {
+            "en": "Zone (empty: any)",
+            "fr": "Zone (vide : n'importe laquelle)"
+          }
+        }
+      ],
+      "variables": [
+        {
+          "key": "zone_name",
+          "type": "string",
+          "label": {
+            "en": "Zone",
+            "fr": "Zone"
+          }
+        },
+        {
+          "key": "zone_number",
+          "type": "number",
+          "label": {
+            "en": "Zone number",
+            "fr": "Numéro de zone"
+          }
+        },
+        {
+          "key": "duration_minutes",
+          "type": "number",
+          "label": {
+            "en": "Planned duration (min)",
+            "fr": "Durée prévue (min)"
+          }
+        },
+        {
+          "key": "started_at",
+          "type": "string",
+          "label": {
+            "en": "Started at (ISO)",
+            "fr": "Commencé à (ISO)"
+          }
+        },
+        {
+          "key": "controller_name",
+          "type": "string",
+          "label": {
+            "en": "Controller",
+            "fr": "Contrôleur"
+          }
+        }
+      ]
+    },
+    {
+      "key": "watering_finished",
+      "label": {
+        "en": "Rachio watering finished",
+        "fr": "Arrosage Rachio terminé"
+      },
+      "description": {
+        "en": "A zone stopped watering: completed, stopped, or the next zone of the schedule began.",
+        "fr": "Une zone a cessé d'arroser : terminé, arrêté, ou la zone suivante du programme a commencé."
+      },
+      "fields": [
+        {
+          "key": "controller",
+          "type": "select",
+          "source": "devices",
+          "required": false,
+          "label": {
+            "en": "Controller (empty: any)",
+            "fr": "Contrôleur (vide : n'importe lequel)"
+          }
+        },
+        {
+          "key": "zone",
+          "type": "select",
+          "source": "devices",
+          "required": false,
+          "label": {
+            "en": "Zone (empty: any)",
+            "fr": "Zone (vide : n'importe laquelle)"
+          }
+        }
+      ],
+      "variables": [
+        {
+          "key": "zone_name",
+          "type": "string",
+          "label": {
+            "en": "Zone",
+            "fr": "Zone"
+          }
+        },
+        {
+          "key": "zone_number",
+          "type": "number",
+          "label": {
+            "en": "Zone number",
+            "fr": "Numéro de zone"
+          }
+        },
+        {
+          "key": "minutes",
+          "type": "number",
+          "label": {
+            "en": "Watered (min)",
+            "fr": "Arrosé (min)"
+          }
+        },
+        {
+          "key": "finished_at",
+          "type": "string",
+          "label": {
+            "en": "Finished at (ISO)",
+            "fr": "Terminé à (ISO)"
+          }
+        },
+        {
+          "key": "controller_name",
+          "type": "string",
+          "label": {
+            "en": "Controller",
+            "fr": "Contrôleur"
+          }
+        }
+      ]
+    },
+    {
+      "key": "rain_delay_changed",
+      "label": {
+        "en": "Rachio rain delay set or cleared",
+        "fr": "Délai pluie Rachio posé ou levé"
+      },
+      "description": {
+        "en": "A rain delay was set (or changed) on a controller, or it ended.",
+        "fr": "Un délai pluie a été posé (ou modifié) sur un contrôleur, ou il a pris fin."
+      },
+      "fields": [
+        {
+          "key": "controller",
+          "type": "select",
+          "source": "devices",
+          "required": false,
+          "label": {
+            "en": "Controller (empty: any)",
+            "fr": "Contrôleur (vide : n'importe lequel)"
+          }
+        },
+        {
+          "key": "event",
+          "type": "select",
+          "required": false,
+          "label": {
+            "en": "Event (empty: both)",
+            "fr": "Événement (vide : les deux)"
+          },
+          "options": [
+            {
+              "value": "set",
+              "label": {
+                "en": "Rain delay set",
+                "fr": "Délai pluie posé"
+              }
+            },
+            {
+              "value": "cleared",
+              "label": {
+                "en": "Rain delay cleared",
+                "fr": "Délai pluie levé"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "event",
+          "type": "string",
+          "label": {
+            "en": "Event",
+            "fr": "Événement"
+          }
+        },
+        {
+          "key": "until",
+          "type": "string",
+          "label": {
+            "en": "Delayed until (ISO)",
+            "fr": "Différé jusqu'à (ISO)"
+          }
+        },
+        {
+          "key": "hours",
+          "type": "number",
+          "label": {
+            "en": "Hours left",
+            "fr": "Heures restantes"
+          }
+        },
+        {
+          "key": "controller_name",
+          "type": "string",
+          "label": {
+            "en": "Controller",
+            "fr": "Contrôleur"
+          }
+        }
+      ]
+    },
+    {
+      "key": "controller_status_changed",
+      "label": {
+        "en": "Rachio controller offline or online",
+        "fr": "Contrôleur Rachio hors ligne ou en ligne"
+      },
+      "description": {
+        "en": "A controller lost its connection to Rachio, or came back.",
+        "fr": "Un contrôleur a perdu sa connexion à Rachio, ou l'a retrouvée."
+      },
+      "fields": [
+        {
+          "key": "controller",
+          "type": "select",
+          "source": "devices",
+          "required": false,
+          "label": {
+            "en": "Controller (empty: any)",
+            "fr": "Contrôleur (vide : n'importe lequel)"
+          }
+        },
+        {
+          "key": "event",
+          "type": "select",
+          "required": false,
+          "label": {
+            "en": "Event (empty: both)",
+            "fr": "Événement (vide : les deux)"
+          },
+          "options": [
+            {
+              "value": "online",
+              "label": {
+                "en": "Back online",
+                "fr": "De nouveau en ligne"
+              }
+            },
+            {
+              "value": "offline",
+              "label": {
+                "en": "Offline",
+                "fr": "Hors ligne"
+              }
+            }
+          ]
+        }
+      ],
+      "variables": [
+        {
+          "key": "event",
+          "type": "string",
+          "label": {
+            "en": "Event",
+            "fr": "Événement"
+          }
+        },
+        {
+          "key": "controller_name",
+          "type": "string",
+          "label": {
+            "en": "Controller",
+            "fr": "Contrôleur"
+          }
+        }
+      ]
+    }
+  ],
+  "scene_actions": [
+    {
+      "key": "water_zone",
+      "label": {
+        "en": "Rachio: water a zone",
+        "fr": "Rachio : arroser une zone"
+      },
+      "description": {
+        "en": "Waters one zone for the given minutes (the default watering time when empty).",
+        "fr": "Arrose une zone pendant les minutes données (la durée par défaut si vide)."
+      },
+      "timeout_seconds": 20,
+      "fields": [
+        {
+          "key": "zone",
+          "type": "select",
+          "source": "devices",
+          "required": true,
+          "label": {
+            "en": "Zone",
+            "fr": "Zone"
+          }
+        },
+        {
+          "key": "minutes",
+          "type": "number",
+          "required": false,
+          "min": 1,
+          "max": 180,
+          "label": {
+            "en": "Minutes (empty: the default)",
+            "fr": "Minutes (vide : la durée par défaut)"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "key": "zone_name",
+          "type": "string",
+          "label": {
+            "en": "Zone",
+            "fr": "Zone"
+          }
+        },
+        {
+          "key": "controller_name",
+          "type": "string",
+          "label": {
+            "en": "Controller",
+            "fr": "Contrôleur"
+          }
+        },
+        {
+          "key": "minutes",
+          "type": "number",
+          "label": {
+            "en": "Minutes",
+            "fr": "Minutes"
+          }
+        }
+      ]
+    },
+    {
+      "key": "water_zones",
+      "label": {
+        "en": "Rachio: water several zones",
+        "fr": "Rachio : arroser plusieurs zones"
+      },
+      "description": {
+        "en": "Waters the chosen zones one after the other, in zone order, for the same minutes each.",
+        "fr": "Arrose les zones choisies l'une après l'autre, dans l'ordre des zones, chacune les mêmes minutes."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "zones",
+          "type": "multi_select",
+          "source": "devices",
+          "required": true,
+          "label": {
+            "en": "Zones",
+            "fr": "Zones"
+          }
+        },
+        {
+          "key": "minutes",
+          "type": "number",
+          "required": false,
+          "min": 1,
+          "max": 180,
+          "label": {
+            "en": "Minutes per zone (empty: the default)",
+            "fr": "Minutes par zone (vide : la durée par défaut)"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "key": "count",
+          "type": "number",
+          "label": {
+            "en": "Zones started",
+            "fr": "Zones lancées"
+          }
+        },
+        {
+          "key": "total_minutes",
+          "type": "number",
+          "label": {
+            "en": "Total minutes",
+            "fr": "Minutes au total"
+          }
+        }
+      ]
+    },
+    {
+      "key": "run_schedule",
+      "label": {
+        "en": "Rachio: run a schedule",
+        "fr": "Rachio : lancer un programme"
+      },
+      "description": {
+        "en": "Starts a Rachio schedule now, by its name.",
+        "fr": "Lance maintenant un programme Rachio, par son nom."
+      },
+      "timeout_seconds": 20,
+      "fields": [
+        {
+          "key": "schedule",
+          "type": "string",
+          "required": true,
+          "label": {
+            "en": "Schedule name",
+            "fr": "Nom du programme"
+          },
+          "description": {
+            "en": "As shown in the Rachio app (the \"Test Rachio\" button lists them).",
+            "fr": "Tel qu'affiché dans l'application Rachio (le bouton « Tester Rachio » les liste)."
+          },
+          "placeholder": {
+            "en": "Lawn",
+            "fr": "Pelouse"
+          }
+        },
+        {
+          "key": "controller",
+          "type": "select",
+          "source": "devices",
+          "required": false,
+          "label": {
+            "en": "Controller (empty: any)",
+            "fr": "Contrôleur (vide : n'importe lequel)"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "key": "schedule_name",
+          "type": "string",
+          "label": {
+            "en": "Schedule",
+            "fr": "Programme"
+          }
+        },
+        {
+          "key": "controller_name",
+          "type": "string",
+          "label": {
+            "en": "Controller",
+            "fr": "Contrôleur"
+          }
+        },
+        {
+          "key": "minutes",
+          "type": "number",
+          "label": {
+            "en": "Planned minutes",
+            "fr": "Minutes prévues"
+          }
+        }
+      ]
+    },
+    {
+      "key": "skip_schedule",
+      "label": {
+        "en": "Rachio: skip a schedule",
+        "fr": "Rachio : sauter un programme"
+      },
+      "description": {
+        "en": "Skips the next run of a Rachio schedule, by its name.",
+        "fr": "Saute le prochain passage d'un programme Rachio, par son nom."
+      },
+      "timeout_seconds": 20,
+      "fields": [
+        {
+          "key": "schedule",
+          "type": "string",
+          "required": true,
+          "label": {
+            "en": "Schedule name",
+            "fr": "Nom du programme"
+          },
+          "description": {
+            "en": "As shown in the Rachio app (the \"Test Rachio\" button lists them).",
+            "fr": "Tel qu'affiché dans l'application Rachio (le bouton « Tester Rachio » les liste)."
+          },
+          "placeholder": {
+            "en": "Lawn",
+            "fr": "Pelouse"
+          }
+        },
+        {
+          "key": "controller",
+          "type": "select",
+          "source": "devices",
+          "required": false,
+          "label": {
+            "en": "Controller (empty: any)",
+            "fr": "Contrôleur (vide : n'importe lequel)"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "key": "schedule_name",
+          "type": "string",
+          "label": {
+            "en": "Schedule",
+            "fr": "Programme"
+          }
+        },
+        {
+          "key": "controller_name",
+          "type": "string",
+          "label": {
+            "en": "Controller",
+            "fr": "Contrôleur"
+          }
+        }
+      ]
+    },
+    {
+      "key": "stop_watering",
+      "label": {
+        "en": "Rachio: stop watering",
+        "fr": "Rachio : arrêter l'arrosage"
+      },
+      "description": {
+        "en": "Stops every zone of a controller (every online controller when empty).",
+        "fr": "Arrête toutes les zones d'un contrôleur (tous les contrôleurs en ligne si vide)."
+      },
+      "timeout_seconds": 20,
+      "fields": [
+        {
+          "key": "controller",
+          "type": "select",
+          "source": "devices",
+          "required": false,
+          "label": {
+            "en": "Controller (empty: all)",
+            "fr": "Contrôleur (vide : tous)"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "key": "stopped",
+          "type": "number",
+          "label": {
+            "en": "Controllers stopped",
+            "fr": "Contrôleurs arrêtés"
+          }
+        }
+      ]
+    },
+    {
+      "key": "set_rain_delay",
+      "label": {
+        "en": "Rachio: set a rain delay",
+        "fr": "Rachio : poser un délai pluie"
+      },
+      "description": {
+        "en": "Pauses the schedules for the given hours (0 cancels the rain delay).",
+        "fr": "Suspend les programmes pendant les heures données (0 annule le délai pluie)."
+      },
+      "timeout_seconds": 20,
+      "fields": [
+        {
+          "key": "hours",
+          "type": "number",
+          "required": true,
+          "min": 0,
+          "max": 168,
+          "label": {
+            "en": "Hours (0 cancels, 168 at most)",
+            "fr": "Heures (0 annule, 168 au plus)"
+          }
+        },
+        {
+          "key": "controller",
+          "type": "select",
+          "source": "devices",
+          "required": false,
+          "label": {
+            "en": "Controller (empty: all)",
+            "fr": "Contrôleur (vide : tous)"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "key": "hours",
+          "type": "number",
+          "label": {
+            "en": "Hours",
+            "fr": "Heures"
+          }
+        },
+        {
+          "key": "until",
+          "type": "string",
+          "label": {
+            "en": "Delayed until (ISO)",
+            "fr": "Différé jusqu'à (ISO)"
+          }
+        },
+        {
+          "key": "controllers",
+          "type": "number",
+          "label": {
+            "en": "Controllers",
+            "fr": "Contrôleurs"
+          }
+        }
+      ]
+    }
+  ]
+}
