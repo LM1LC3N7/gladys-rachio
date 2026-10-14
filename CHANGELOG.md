@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-10-14
+
 ### Added
 
 - One device per Rachio controller: online, on / standby switch, watering
@@ -31,3 +33,6 @@ the notes of the version's GitHub Release.
   calls left and paused until the daily reset when the budget is spent.
 - "Test Rachio" button: the controllers, zones, schedule names and API calls
   left today.
+
+[Unreleased]: https://github.com/LM1LC3N7/gladys-rachio/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/LM1LC3N7/gladys-rachio/releases/tag/v0.1.1

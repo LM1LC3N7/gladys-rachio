@@ -1,6 +1,6 @@
 {
   "name": "gladys-rachio",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "Gladys Assistant external integration for Rachio smart sprinkler controllers: zones, watering, rain delay, schedules, scene triggers and actions, dashboard widget. Unofficial, not affiliated with Rachio.",
   "type": "module",
