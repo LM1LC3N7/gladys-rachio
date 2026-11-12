@@ -2,7 +2,7 @@
 
 ## Before announcing
 
-- [ ] Test on a real Gladys 5.1+ with a real Rachio account (Gen 2 or 3
+- [ ] Test on a real Gladys 5.3+ with a real Rachio account (Gen 2 or 3
       controller): the key, discovery, the zone switches, a schedule run, a
       rain delay, the standby switch, the widget and its four buttons, the
       four scene triggers over a watering day.
