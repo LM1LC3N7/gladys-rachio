@@ -44,7 +44,7 @@ test('the store basics', () => {
   assert.equal(manifest.manifest_version, 1);
   assert.equal(manifest.type, 'device');
   assert.equal(manifest.location, undefined, 'no house location needed');
-  assert.match(manifest.gladys_version, />=5\.1\.0/);
+  assert.match(manifest.gladys_version, />=5\.3\.0/);
   assert.equal(manifest.docker_image, `ghcr.io/lm1lc3n7/gladys-rachio:${manifest.version}`);
   assert.equal(manifest.version, JSON.parse(read('package.json')).version);
   assert.equal(
@@ -135,4 +135,13 @@ test('every trigger field and variable is a key of the events the code fires', (
       assert.ok(key in event.data, `${trigger.key}: "${key}" is in the event data`);
     }
   }
+});
+
+test('the catalog countries: the United States and Canada, which needs Gladys >= 5.3.0', () => {
+  assert.deepEqual(manifest.countries, ['US', 'CA']);
+  const [major, minor] = manifest.gladys_version
+    .match(/>=\s*(\d+)\.(\d+)/)
+    .slice(1)
+    .map(Number);
+  assert.ok(major > 5 || (major === 5 && minor >= 3), 'countries needs Gladys 5.3.0');
 });
